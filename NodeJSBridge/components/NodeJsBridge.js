@@ -8,8 +8,23 @@ import {Alert} from 'react-native';
 const TAG = 'NodeJsBridge';
 
 class NodeJsBridge extends React.Component {
-  static sendMessage = (message) => {
-
+  static sendMessage = (type = undefined, id = null, data = undefined) => {
+    if (typeof type === 'string') {
+      return NodeJs
+        .channel
+        .send(
+          {
+            $: {
+              type,
+              id,
+            },
+            data,
+          },
+        );
+    }
+    throw new Error(
+      `Expected string type, encountered ${typeof type}.`,
+    );
   };
   static onMessage = (message, script) => {
     const {
@@ -21,8 +36,12 @@ class NodeJsBridge extends React.Component {
     } = message;
     switch (type) {
       case `${TAG}/init`:
-        Alert.alert('should init! '+data);
-        return;
+        return NodeJsBridge
+          .sendMessage(
+            `${TAG}/load`,
+            null,
+            script,
+          );
       case `${TAG}/error`:
         if (id !== null && id !== undefined) {
           return Alert.alert('should propagate error here!');
@@ -40,33 +59,35 @@ class NodeJsBridge extends React.Component {
     NodeJs.start(
       'nodejs-mobile-react-native-bridge.js',
     );
-    NodeJs.channel.addListener(
-      'message',
-      (message) => {
-        if (typeof message === 'object') {
-          const { $ } = message;
-          if (typeof $ === 'object') {
-            const { type } = $;
-            if (typeof type === 'string') {
-              return NodeJsBridge
-                .onMessage(
-                  message,
-                );
+    NodeJs
+      .channel
+      .addListener(
+        'message',
+        (message) => {
+          if (typeof message === 'object') {
+            const { $ } = message;
+            if (typeof $ === 'object') {
+              const { type } = $;
+              if (typeof type === 'string') {
+                return NodeJsBridge
+                  .onMessage(
+                    message,
+                  );
+              }
+              throw new Error(
+                `Expected string type, encountered ${typeof type}.`,
+              );
             }
             throw new Error(
-              `Expected string type, encountered ${typeof type}.`,
+              `Expected object $, encountered ${typeof $}.`,
             );
           }
           throw new Error(
-            `Expected object $, encountered ${typeof $}.`,
+            `Expected object message, encountered ${typeof message}.`,
           );
-        }
-        throw new Error(
-          `Expected object message, encountered ${typeof message}.`,
-        );
-      },
-      this,
-    );
+        },
+        this,
+      );
   }
   UNSAFE_componentWillUnmount() {
 

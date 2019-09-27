@@ -22,6 +22,20 @@ const sendMessage = (type = undefined, id = null, data = undefined) => {
 };
 
 const onMessage = (message) => {
+  const {
+    $: {
+      type,
+      id,
+    },
+    data,
+  } = message;
+  switch (type) {
+    default:
+      return sendError(
+        id,
+        `Encountered unrecognized type "${type}".`,
+      );
+  }
 };
 
 const sendInit = () => sendMessage(
@@ -39,20 +53,33 @@ const sendError = (
   e,
 );
 
-//channel.on(
-//  'message',
-//  (message) => {
-//    if (typeof message !== 'object') {
-//
-//    }
-//  },
-//);
+channel.on(
+  'message',
+  (message) => {
+    if (typeof message === 'object') {
+      const { $ } = message;
+      if (typeof $ === 'object') {
+        const { id, type } = $;
+        if (typeof type === 'string') {
+          return onMessage(
+            message,
+          );
+        }
+        return sendError(
+          id,
+          `Expected string type, encountered ${typeof type}.`,
+        );
+      }
+      return sendError(
+        null,
+        `Expected object $, encountered ${typeof $}.`,
+      );
+    }
+    return sendError(
+      null,
+      `Expected object message, encountered ${typeof message}.`,
+    );
+  },
+);
 
 sendInit();
-
-// XXX: Respects real objects!
-//channel.send(
-//  {
-//    x: 2,
-//  },
-//);
