@@ -1,6 +1,7 @@
 const { channel } = require('rn-bridge');
 
 const TAG = 'NodeJsBridge';
+var src = undefined;
 
 const sendMessage = (type = undefined, id = null, data = undefined) => {
   if (typeof type === 'string') {
@@ -30,8 +31,41 @@ const onMessage = (message) => {
     data,
   } = message;
   switch (type) {
+    case `${TAG}/exec`:
+      if (typeof data === 'object') {
+        const { func, args } = data;
+        return Promise
+          .resolve()
+          .then(
+            function() {
+              return src[func].apply(
+                this,
+                Object
+                  .entries(args || {})
+                  .sort(([ k1 ], [ k2 ]) => k1 - k2)
+                  .map(([ k, v ]) => v),
+              );
+            },
+          )
+          .then(
+            result => sendResult(
+              id,
+              result,
+            ),
+          )
+          .catch(
+            e => sendError(
+              id,
+              e.toString(),
+            ),
+          );
+      }
+      // TODO: respect id
+      return sendError(
+        id,
+        `Expected object data, encountered ${typeof data}.`,
+      );
     case `${TAG}/load`: 
-      let src;
       try {
         src = require(data);
       } catch (e) {
@@ -41,9 +75,12 @@ const onMessage = (message) => {
         );
       }
       if (typeof src === 'object') {
-        return sendError(
+        return sendApi(
           id,
-          'success',
+          Object
+            .entries(src)
+            .filter(([k, v]) => (typeof v === 'function'))
+            .map(([k]) => k)
         );
       }
       return sendError(
@@ -62,6 +99,18 @@ const sendInit = () => sendMessage(
   `${TAG}/init`,
   null,
   'hello!',
+);
+
+const sendApi = (id, api) => sendMessage(
+  `${TAG}/api`,
+  null,
+  api,
+);
+
+const sendResult = (id, result) => sendMessage(
+  `${TAG}/result`,
+  id,
+  result,
 );
 
 const sendError = (

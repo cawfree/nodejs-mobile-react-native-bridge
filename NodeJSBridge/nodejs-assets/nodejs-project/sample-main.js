@@ -1,7 +1,3 @@
-module.exports = 'hi';
-
-//module.exports = {
-//  hello: (someArg) => (
-//    `hello, ${someArg}!`
-//  ),
-//};
+module.exports = {
+  hello: someArg => `hello, ${someArg}!`,
+};

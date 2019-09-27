@@ -8,7 +8,31 @@ import {Alert} from 'react-native';
 const TAG = 'NodeJsBridge';
 
 class NodeJsBridge extends React.Component {
-  static sendMessage = (type = undefined, id = null, data = undefined) => {
+  createApi = (api, requests, sendMessage) => api
+    .reduce(
+      (obj, func) => ({
+        ...obj,
+        [func]: function() {
+          const args = arguments;
+          const id = uuidv4();
+          return new Promise(
+            (resolve, reject) => {
+              requests[id] = [resolve, reject];
+              return sendMessage(
+                `${TAG}/exec`,
+                id,
+                {
+                  func,
+                  args,
+                },
+              );
+            },
+          );
+        },
+      }),
+      {},
+    );
+  sendMessage = (type = undefined, id = null, data = undefined) => {
     if (typeof type === 'string') {
       return NodeJs
         .channel
@@ -26,7 +50,7 @@ class NodeJsBridge extends React.Component {
       `Expected string type, encountered ${typeof type}.`,
     );
   };
-  static onMessage = (message, script) => {
+  onMessage = (message, script, requests, onHandleBridge) => {
     const {
       $: {
         type,
@@ -36,18 +60,46 @@ class NodeJsBridge extends React.Component {
     } = message;
     switch (type) {
       case `${TAG}/init`:
-        return NodeJsBridge
+        return this
           .sendMessage(
             `${TAG}/load`,
             null,
             script,
           );
+      case `${TAG}/result`:
+        const [ resolve ] = requests[id] || [];
+        if (!!resolve) {
+          delete requests[id];
+          return resolve(
+            data,
+          );
+        }
+        throw new Error(
+          `Encountered an orphaned result!`,
+        );
       case `${TAG}/error`:
         if (id !== null && id !== undefined) {
-          return Alert.alert('should propagate error here!');
+          const [ unused, reject ] = requests[id] || [];
+          if (!!reject) {
+            delete requests[id];
+            return reject(
+              new Error(
+                data,
+              ),
+            );
+          } 
         }
         throw new Error(
           data,
+        );
+      case `${TAG}/api`:
+        return onHandleBridge(
+          this
+            .createApi(
+              data,
+              requests,
+              this.sendMessage,
+            ),
         );
       default:
         throw new Error(
@@ -56,7 +108,10 @@ class NodeJsBridge extends React.Component {
     }
   }; 
   UNSAFE_componentWillMount() {
-    const { script } = this.props;
+    const {
+      script,
+      onHandleBridge,
+    } = this.props;
     if (typeof script !== 'string') {
       throw new Error(
         `The 'script' prop is required for the NodeJsBridge.`,
@@ -65,6 +120,7 @@ class NodeJsBridge extends React.Component {
     NodeJs.start(
       'nodejs-mobile-react-native-bridge.js',
     );
+    const requests = {};
     NodeJs
       .channel
       .addListener(
@@ -75,10 +131,12 @@ class NodeJsBridge extends React.Component {
             if (typeof $ === 'object') {
               const { type } = $;
               if (typeof type === 'string') {
-                return NodeJsBridge
+                return this
                   .onMessage(
                     message,
                     script,
+                    requests,
+                    onHandleBridge,
                   );
               }
               throw new Error(
@@ -109,10 +167,11 @@ class NodeJsBridge extends React.Component {
 
 NodeJsBridge.propTypes = {
   script: PropTypes.string.isRequired,
+  onHandleBridge: PropTypes.func,
 };
 
 NodeJsBridge.defaultProps = {
-
+  onHandleBridge: bridge => null,
 };
 
 export default NodeJsBridge;
