@@ -1,7 +1,7 @@
 # nodejs-mobile-react-native-bridge
 A high-level wrapper interface to Node.js for React Native.
 
-## So... what is this?
+## 🤔 So... what is this?
 
 When running intensive computation in your JavaScript thread, you run the risk of dropping render frames, which causes your app to respond slowly animate less smoothly and feel sluggish. This happens because execessive computational overhead can diminish your ability to reach the next render frame, which ideally should operate at a frequency of 60fps.
 
@@ -27,7 +27,7 @@ yarn add nodejs-mobile-react-native-bridge
 
 This will install the file `nodejs-mobile-react-native-bridge.js` to your `nodejs-assets/nodejs-project`directory installed by `nodejs-mobile-react-native`.
 
-##  Example
+## ✍️ Example
 
 **<ProjectRoot>/App.js**
 
