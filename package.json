@@ -1,0 +1,17 @@
+{
+  "name": "nodejs-mobile-react-native-bridge",
+  "version": "0.0.1",
+  "description": "A high-level wrapper interface to Node.js for React Native.",
+  "main": "index.js",
+  "repository": "https://github.com/cawfree/nodejs-mobile-react-native-bridge",
+  "author": "Alex Thomas (@cawfree) <hello@cawfree.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "postinstall": "node scripts/create-node-structure.js"
+  },
+  "peerDependencies": {
+    "nodejs-mobile-react-native": "^0.5.0",
+    "uuid": "^3.3.3"
+  }
+}
