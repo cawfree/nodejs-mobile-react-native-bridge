@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import NodeJs from 'nodejs-mobile-react-native';
 import uuidv4 from 'uuid/v4';
 
-import {Alert} from 'react-native';
-
 const TAG = 'NodeJsBridge';
 
 class NodeJsBridge extends React.Component {
@@ -153,9 +151,6 @@ class NodeJsBridge extends React.Component {
         },
         this,
       );
-  }
-  UNSAFE_componentWillUnmount() {
-
   }
   render() {
     return (

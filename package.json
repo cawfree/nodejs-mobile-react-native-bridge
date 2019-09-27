@@ -8,13 +8,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "install-files nodejs-assets"
+    "postinstall": "cp ./res/nodejs-mobile-react-native-bridge.js $INIT_CWD/nodejs-assets/nodejs-project"
   },
   "dependencies": {
     "nodejs-mobile-react-native": "^0.5.0",
     "uuid": "^3.3.3"
-  },
-  "devDependencies": {
-    "install-files": "^1.1.5"
   }
 }
