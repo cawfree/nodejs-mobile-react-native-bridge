@@ -31,22 +31,25 @@ const onMessage = (message) => {
   } = message;
   switch (type) {
     case `${TAG}/load`: 
+      let src;
       try {
-        const src = require(data);
-        return sendError(
-          id,
-          JSON.stringify(
-            Object.keys(
-              src,
-            ),
-          ),
-        );
+        src = require(data);
       } catch (e) {
         return sendError(
           id,
-          `Failed to load script "${data}". Does it exist under the nodejs/project directory?`,
+          `Failed to load script "${data}". Please make sure it exists under your nodejs-project directory, and that it is free of syntax errors.`,
         );
-    }
+      }
+      if (typeof src === 'object') {
+        return sendError(
+          id,
+          'success',
+        );
+      }
+      return sendError(
+        id,
+        `require('${data}') did not export an object, which is required by the NodeJsBridge.`,
+      );
     default:
       return sendError(
         id,
