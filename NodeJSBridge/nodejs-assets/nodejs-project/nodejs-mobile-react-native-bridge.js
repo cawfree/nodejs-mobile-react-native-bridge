@@ -30,6 +30,11 @@ const onMessage = (message) => {
     data,
   } = message;
   switch (type) {
+    case `${TAG}/load`: 
+      return sendError(
+        id,
+        'Will attempt load here!',
+      );
     default:
       return sendError(
         id,
