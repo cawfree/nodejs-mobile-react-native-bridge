@@ -8,10 +8,13 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "node scripts/create-node-structure.js"
+    "postinstall": "install-files nodejs-assets"
   },
-  "peerDependencies": {
+  "dependencies": {
     "nodejs-mobile-react-native": "^0.5.0",
     "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "install-files": "^1.1.5"
   }
 }
