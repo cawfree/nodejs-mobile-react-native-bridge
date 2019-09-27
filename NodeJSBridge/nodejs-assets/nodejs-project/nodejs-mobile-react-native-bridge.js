@@ -31,10 +31,22 @@ const onMessage = (message) => {
   } = message;
   switch (type) {
     case `${TAG}/load`: 
-      return sendError(
-        id,
-        'Will attempt load here!',
-      );
+      try {
+        const src = require(data);
+        return sendError(
+          id,
+          JSON.stringify(
+            Object.keys(
+              src,
+            ),
+          ),
+        );
+      } catch (e) {
+        return sendError(
+          id,
+          `Failed to load script "${data}". Does it exist under the nodejs/project directory?`,
+        );
+    }
     default:
       return sendError(
         id,

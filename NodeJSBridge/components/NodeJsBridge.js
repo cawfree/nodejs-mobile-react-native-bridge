@@ -56,6 +56,12 @@ class NodeJsBridge extends React.Component {
     }
   }; 
   UNSAFE_componentWillMount() {
+    const { script } = this.props;
+    if (typeof script !== 'string') {
+      throw new Error(
+        `The 'script' prop is required for the NodeJsBridge.`,
+      );
+    }
     NodeJs.start(
       'nodejs-mobile-react-native-bridge.js',
     );
@@ -72,6 +78,7 @@ class NodeJsBridge extends React.Component {
                 return NodeJsBridge
                   .onMessage(
                     message,
+                    script,
                   );
               }
               throw new Error(
