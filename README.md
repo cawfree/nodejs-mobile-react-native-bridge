@@ -29,7 +29,7 @@ This will install the file `nodejs-mobile-react-native-bridge.js` to your `nodej
 
 ## ✍️ Example
 
-**<ProjectRoot>/App.js**
+**path/to/your/App.js**
 
 ```javascript
 import React from 'react';
@@ -46,7 +46,7 @@ export default () => (
 );
 ```
 
-**<ProjectRoot>/nodejs-assets/nodejs-project/sample-main.js**
+**path/to/your/nodejs-assets/nodejs-project/sample-main.js**
 
 This file serves as the entry-point to your decoupled logic. Each function exported by the file becomes available as promisified function via the `bridge` object returned via the `onHandleBridge` callback prop, which allows you to easily interact with your threaded Node.js project.
 
