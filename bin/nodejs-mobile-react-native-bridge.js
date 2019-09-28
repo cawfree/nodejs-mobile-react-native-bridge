@@ -98,7 +98,7 @@ const onMessage = (message) => {
 const sendInit = () => sendMessage(
   `${TAG}/init`,
   null,
-  'hello!',
+  null,
 );
 
 const sendApi = (id, api) => sendMessage(

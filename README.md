@@ -39,8 +39,8 @@ export default () => (
   <NodeJsBridge
     script="sample-main.js"
     onHandleBridge={({ hello }) => hello('world')
-      .then(console.log)
-      .catch(console.warn)} // "hello, world!"
+      .then(console.log) // "hello, world!"
+      .catch(console.warn)}
     
   />
 );
@@ -48,13 +48,13 @@ export default () => (
 
 **path/to/your/nodejs-assets/nodejs-project/sample-main.js**
 
-This file serves as the entry-point to your decoupled logic. Each function exported by the file becomes available as promisified function via the `bridge` object returned via the `onHandleBridge` callback prop, which allows you to easily interact with your threaded Node.js project.
-
 ```javascript
 module.exports = {
   hello: str => `hello, ${str}!`,
 };
 ```
+
+This file serves as the entry-point to your decoupled logic. Each function exported by the file becomes available as promisified function via the `bridge` object returned via the `onHandleBridge` callback prop, which allows you to easily interact with your threaded Node.js project.
 
 ## ✌️  License
 [MIT](https://opensource.org/licenses/MIT)
