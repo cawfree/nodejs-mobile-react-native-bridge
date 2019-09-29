@@ -3,7 +3,7 @@ A high-level wrapper interface to Node.js for React Native.
 
 ## 🤔 So... what is this?
 
-When running intensive computation in your JavaScript thread, you run the risk of dropping render frames, which causes your app to respond slowly, animate poorly and feel sluggish. This happens because execessive computational overhead can diminish your ability to reach the next render frame, which ideally should operate at a frequency of 60fps.
+When running intensive computation in your JavaScript thread, you run the risk of dropping render frames, which causes your app to respond slowly, animate poorly and feel sluggish. This happens because execessive computational overhead can diminish your ability to reach the next render frame, which ideally should operate at a rate of 60fps.
 
 Luckily, [JaneaSystems](https://github.com/JaneaSystems) have open sourced a [native mobile execution container](https://github.com/JaneaSystems/nodejs-mobile-react-native) for Node.js which operates concurrently to your traditional JavaScript render thread. This library is available for both iOS and Android, and provides implementors with the ability to diversify their execution logic by delegating stateless computation for parallel execution. This helps promote more advantageous utilisation of the runtime hardware, whilst simultaneously unburdening your render thread.
 
