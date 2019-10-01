@@ -1,7 +1,23 @@
-const { channel } = require('rn-bridge');
+const { app, channel } = require('rn-bridge');
 
 const TAG = 'NodeJsBridge';
 var src = undefined;
+
+app
+  .on(
+    'pause',
+    (pauseLock) => {
+      pauseLock.release();
+    },
+  );
+
+app
+  .on(
+    'resume',
+    () => {
+      
+    },
+  );
 
 const sendMessage = (type = undefined, id = null, data = undefined) => {
   if (typeof type === 'string') {
