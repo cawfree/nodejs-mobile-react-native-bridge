@@ -72,7 +72,7 @@ const onMessage = (message) => {
           .catch(
             e => sendError(
               id,
-              e.toString(),
+              `Threaded execution error! Function: ${func} Arguments: ${JSON.stringify(args)}\n${JSON.stringify(e.toString())}`,
             ),
           );
       }
