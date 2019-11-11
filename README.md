@@ -16,7 +16,7 @@ This library serves as an abstraction layer to avoid these concerns, by defining
 Using [`npm`]():
 
 ```sh
-npm install --save nodejs-react-native-bridge
+npm install --save nodejs-mobile-react-native-bridge
 ```
 
 Using [`yarn`]():
