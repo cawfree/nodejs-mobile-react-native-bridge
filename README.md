@@ -1,5 +1,5 @@
 # nodejs-mobile-react-native-bridge
-A high-level wrapper interface to Node.js for React Native.
+A high-level wrapper interface to Node.js for React Native. [watch the talk](https://youtu.be/XDOCDBJsqzI?t=11239)
 
 ## 🤔 So... what is this?
 
